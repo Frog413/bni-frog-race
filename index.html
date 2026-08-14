@@ -1,34 +1,832 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en-GB">
 <head>
-    <title>BNI Frog Race</title>
-    <meta charset="UTF-8">
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            background:#e0f7fa;
-            text-align:center;
-            padding:50px;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BNI 1:1 Frog Race</title>
 
-        h1{
-            color:#047857;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        .frog{
-            font-size:60px;
-        }
-    </style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(#dff7ff, #efffec, #d9f99d);
+      color: #1e293b;
+      min-height: 100vh;
+      overflow-x: auto;
+    }
+
+    .lock-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #a7f3d0, #bae6fd, #fef3c7);
+      padding: 24px;
+    }
+
+    .lock-card {
+      width: 100%;
+      max-width: 460px;
+      background: white;
+      border-radius: 32px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    }
+
+    .lock-card h1 {
+      margin: 0 0 10px;
+      color: #065f46;
+      font-size: 38px;
+    }
+
+    .lock-card p {
+      color: #475569;
+      font-weight: 700;
+    }
+
+    .password-box {
+      width: 100%;
+      padding: 14px;
+      border-radius: 999px;
+      border: 2px solid #10b981;
+      text-align: center;
+      font-size: 18px;
+      margin: 14px 0;
+      outline: none;
+    }
+
+    .password-button {
+      border: 0;
+      background: #047857;
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 13px 26px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(4, 120, 87, 0.25);
+    }
+
+    .error {
+      display: none;
+      margin-top: 12px;
+      color: #be123c;
+      font-weight: 900;
+    }
+
+    .wrap {
+      display: none;
+      min-width: 1180px;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 32px;
+      box-shadow: 0 18px 45px rgba(15, 118, 110, 0.18);
+      text-align: center;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 54px;
+      margin: 0;
+      color: #065f46;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 8px 0;
+      color: #475569;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .pond {
+      position: relative;
+      background: linear-gradient(#67e8f9, #38bdf8, #0891b2);
+      border: 5px solid #67e8f9;
+      border-radius: 32px;
+      box-shadow: 0 20px 42px rgba(2, 132, 199, 0.28);
+      padding: 22px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 8px 36px auto 36px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 26px;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .pond-title {
+      text-align: center;
+      color: white;
+      font-weight: 900;
+      font-size: 26px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      margin-bottom: 18px;
+    }
+
+    .grid12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .topfrog {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lily {
+      position: relative;
+      height: 82px;
+      max-width: 88px;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #bef264, #16a34a);
+      box-shadow: 0 12px 23px rgba(21, 128, 61, 0.32);
+      border: 4px solid #166534;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lily:after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 8px;
+      width: 22px;
+      height: 22px;
+      background: rgba(34, 211, 238, 0.62);
+      border-radius: 999px;
+    }
+
+    .initials {
+      font-size: 12px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+
+    .trophy {
+      position: absolute;
+      top: -30px;
+      font-size: 32px;
+    }
+
+    .topname {
+      background: rgba(255, 255, 255, 0.78);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #064e3b;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+      max-width: 92px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .board {
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: 32px;
+      padding: 22px;
+      box-shadow: 0 18px 45px rgba(15, 118, 110, 0.16);
+    }
+
+    .racegrid {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+    }
+
+    .weeks {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8px 0;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 900;
+      color: #047857;
+    }
+
+    .week {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+    }
+
+    .lanes {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .lane {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      background: linear-gradient(#ecfccb, #ecfdf5);
+      padding: 8px;
+      border-radius: 24px;
+      box-shadow: inset 0 4px 14px rgba(22, 101, 52, 0.12);
+    }
+
+    .square {
+      height: 64px;
+      max-width: 76px;
+      width: 100%;
+      margin: 0 auto;
+      border: 2px solid #a7f3d0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f7fee7, #d1fae5);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .step {
+      position: absolute;
+      left: 7px;
+      top: 4px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #10b981;
+    }
+
+    .frogBadge {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 10px 16px rgba(0, 0, 0, 0.18);
+      border: 4px solid rgba(255, 255, 255, 0.62);
+      font-size: 31px;
+    }
+
+    .startgrid {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .startlabel {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: #047857;
+      font-size: 12px;
+      font-weight: 900;
+      padding-right: 8px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: linear-gradient(#fef3c7, #fde68a);
+      border-radius: 24px;
+      padding: 8px;
+      text-align: center;
+      box-shadow: 0 12px 20px rgba(180, 83, 9, 0.16);
+    }
+
+    .crown {
+      height: 30px;
+      font-size: 25px;
+    }
+
+    .frogspot {
+      height: 62px;
+    }
+
+    .nameinput {
+      width: 100%;
+      border: 2px solid #fbbf24;
+      background: white;
+      border-radius: 999px;
+      padding: 7px 8px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 12px;
+      color: #1e293b;
+      outline: none;
+    }
+
+    .nameinput:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
+    }
+
+    .score {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      margin-top: 5px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .smallbtn {
+      border: 0;
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: white;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .minus {
+      background: #f43f5e;
+    }
+
+    .plus {
+      background: #059669;
+    }
+
+    .bar {
+      height: 8px;
+      background: white;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .winner {
+      margin-top: 18px;
+      border-radius: 32px;
+      background: linear-gradient(90deg, #fef08a, #fed7aa, #fbcfe8);
+      text-align: center;
+      padding: 22px;
+      box-shadow: 0 18px 40px rgba(217, 119, 6, 0.16);
+    }
+
+    .winner .big {
+      font-size: 42px;
+    }
+
+    .winner h2 {
+      margin: 6px 0 4px;
+      color: #065f46;
+      font-size: 30px;
+    }
+
+    .footer {
+      margin-top: 18px;
+      background: #065f46;
+      color: white;
+      border-radius: 32px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 18px 38px rgba(6, 95, 70, 0.24);
+    }
+
+    .footer h2 {
+      margin: 0 0 4px;
+      font-size: 21px;
+    }
+
+    .footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #ecfdf5;
+    }
+
+    .controlrow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 17px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .sound {
+      background: #06b6d4;
+      color: white;
+    }
+
+    .copy {
+      background: #f97316;
+      color: white;
+    }
+
+    .reset {
+      background: white;
+      color: #065f46;
+    }
+
+    .names {
+      background: #fde047;
+      color: #064e3b;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #065f46;
+      color: white;
+      border-radius: 18px;
+      padding: 12px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+      font-weight: 900;
+      display: none;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    .pink { background: linear-gradient(135deg, #f472b6, #db2777); }
+    .sky { background: linear-gradient(135deg, #38bdf8, #2563eb); }
+    .green { background: linear-gradient(135deg, #4ade80, #059669); }
+    .orange { background: linear-gradient(135deg, #fb923c, #d97706); }
+    .purple { background: linear-gradient(135deg, #a78bfa, #6d28d9); }
+    .red { background: linear-gradient(135deg, #f87171, #e11d48); }
+    .yellow { background: linear-gradient(135deg, #fde047, #eab308); }
+    .cyan { background: linear-gradient(135deg, #67e8f9, #0891b2); }
+    .lime { background: linear-gradient(135deg, #bef264, #65a30d); }
+    .rose { background: linear-gradient(135deg, #fda4af, #db2777); }
+    .indigo { background: linear-gradient(135deg, #818cf8, #4338ca); }
+    .emerald { background: linear-gradient(135deg, #6ee7b7, #0f766e); }
+  </style>
 </head>
+
 <body>
+  <div class="lock-screen" id="lockScreen">
+    <div class="lock-card">
+      <h1>🐸 BNI Frog Race</h1>
+      <p>Enter the race password to access the board.</p>
+      <input id="passwordInput" class="password-box" type="password" placeholder="Enter password" />
+      <br />
+      <button class="password-button" id="passwordButton">Access Frog Race</button>
+      <div class="error" id="passwordError">Wrong password. Try again.</div>
+    </div>
+  </div>
 
-<h1>🐸 BNI 1:1 Frog Race 🍃</h1>
+  <div class="wrap" id="gameWrap">
+    <section class="hero">
+      <h1>🐸 BNI 1:1 Frog Race 🍃</h1>
+      <p class="subtitle">20 August 2026 to 30 September 2026</p>
+      <p class="hint">Move a frog up one square for every completed 1:1. Names are editable, sounds are optional, and your board saves in this browser.</p>
+    </section>
 
-<p>The Frog Race website is under construction!</p>
+    <section class="pond">
+      <div class="sparkles">
+        <span>🪷</span><span>💧</span><span>🦋</span><span>💧</span><span>🌿</span><span>💧</span><span>🪷</span><span>💧</span><span>🦋</span><span>🌿</span>
+      </div>
+      <div class="pond-title">🌊 BNI Pond of Glory 🌊</div>
+      <div class="grid12" id="pond"></div>
+    </section>
 
-<div class="frog">🐸 🐸 🐸 🐸 🐸</div>
+    <section class="board">
+      <div class="racegrid">
+        <div class="weeks" id="weeks"></div>
+        <div class="lanes" id="lanes"></div>
+      </div>
 
-<p>If you can see this page, GitHub and Azure are connected correctly.</p>
+      <div class="startgrid">
+        <div class="startlabel">Start</div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
 
+    <section class="winner" id="winner" style="display:none">
+      <div class="big">🎉 🐸 🏆 🐸 🎉</div>
+      <h2>We have a frog on the lily pad!</h2>
+      <p>Brilliant 1:1 momentum. Keep the race going until the end of September.</p>
+    </section>
+
+    <section class="footer">
+      <div>
+        <h2>How to play</h2>
+        <p>Each completed BNI 1:1 moves the relevant frog forward one square. Use Copy scoreboard link to share the current standings.</p>
+      </div>
+      <div class="controlrow">
+        <button class="control sound" id="soundBtn">🔊 Sound On</button>
+        <button class="control copy" id="copyBtn">🔗 Copy scoreboard link</button>
+        <button class="control reset" id="resetBtn">Reset race</button>
+        <button class="control names" id="resetNamesBtn">Reset names</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    const PASSWORD = "FROG2026";
+    const maxSteps = 6;
+    const weeks = ["20 Aug", "27 Aug", "3 Sep", "10 Sep", "17 Sep", "24 Sep"];
+
+    const defaults = [
+      ["Andy J", "pink"],
+      ["Tor", "sky"],
+      ["Louise", "green"],
+      ["Mel", "orange"],
+      ["Elliot", "purple"],
+      ["Jools", "red"],
+      ["Monika", "yellow"],
+      ["Sam", "cyan"],
+      ["Scott", "lime"],
+      ["Sharon", "rose"],
+      ["Vicky", "indigo"],
+      ["Tanya", "emerald"]
+    ].map(([name, colour]) => ({ name, colour, pos: 0 }));
+
+    let soundOn = true;
+    let frogs = loadState();
+
+    function unlockIfAllowed() {
+      if (sessionStorage.getItem("bniFrogRaceUnlocked") === "true") {
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("gameWrap").style.display = "block";
+      }
+    }
+
+    function tryPassword() {
+      const enteredPassword = document.getElementById("passwordInput").value.trim();
+
+      if (enteredPassword === PASSWORD) {
+        sessionStorage.setItem("bniFrogRaceUnlocked", "true");
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("gameWrap").style.display = "block";
+      } else {
+        document.getElementById("passwordError").style.display = "block";
+      }
+    }
+
+    document.getElementById("passwordButton").onclick = tryPassword;
+    document.getElementById("passwordInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        tryPassword();
+      }
+    });
+
+    function getInitials(name) {
+      const clean = (name || "").trim();
+
+      if (!clean) {
+        return "?";
+      }
+
+      const parts = clean.split(/\s+/).filter(Boolean);
+
+      if (parts.length > 1) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+
+      return clean.slice(0, 2).toUpperCase();
+    }
+
+    function loadState() {
+      try {
+        if (location.hash.startsWith("#state=")) {
+          return JSON.parse(decodeURIComponent(atob(location.hash.slice(7))));
+        }
+
+        const saved = localStorage.getItem("bniFrogRaceState");
+        return saved ? JSON.parse(saved) : structuredClone(defaults);
+      } catch (error) {
+        return structuredClone(defaults);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem("bniFrogRaceState", JSON.stringify(frogs));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2300);
+    }
+
+    function playTone(type) {
+      if (!soundOn) {
+        return;
+      }
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+      if (!AudioContext) {
+        return;
+      }
+
+      const ctx = new AudioContext();
+
+      const tone = (frequency, start, duration, volume = 0.16, endFrequency = frequency) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = type === "boing" ? "sine" : "triangle";
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime + start);
+        osc.frequency.exponentialRampToValueAtTime(endFrequency, ctx.currentTime + start + duration);
+        gain.gain.setValueAtTime(volume, ctx.currentTime + start);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+
+        osc.start(ctx.currentTime + start);
+        osc.stop(ctx.currentTime + start + duration);
+      };
+
+      if (type === "boing") {
+        tone(260, 0, 0.12, 0.14, 720);
+        tone(520, 0.1, 0.14, 0.08, 360);
+      }
+
+      if (type === "leader") {
+        tone(440, 0, 0.12, 0.12, 660);
+        tone(660, 0.12, 0.12, 0.12, 880);
+        tone(880, 0.24, 0.18, 0.12, 1100);
+      }
+
+      if (type === "winner") {
+        tone(523, 0, 0.14, 0.16, 523);
+        tone(659, 0.15, 0.14, 0.16, 659);
+        tone(784, 0.3, 0.18, 0.16, 784);
+        tone(1046, 0.5, 0.32, 0.18, 1046);
+      }
+    }
+
+    function moveFrog(index, direction) {
+      const previousLeader = Math.max(...frogs.map(frog => frog.pos));
+      const oldPosition = frogs[index].pos;
+      const newPosition = Math.max(0, Math.min(maxSteps, oldPosition + direction));
+
+      frogs[index].pos = newPosition;
+
+      if (direction > 0 && newPosition !== oldPosition) {
+        playTone("boing");
+
+        if (newPosition === maxSteps) {
+          setTimeout(() => playTone("winner"), 180);
+        } else if (newPosition > previousLeader) {
+          setTimeout(() => playTone("leader"), 180);
+        }
+      }
+
+      saveState();
+      render();
+    }
+
+    function render() {
+      const leader = Math.max(...frogs.map(frog => frog.pos));
+
+      document.getElementById("pond").innerHTML = frogs.map(frog => `
+        <div class="topfrog">
+          <div class="lily">
+            <span class="initials">${getInitials(frog.name)}</span>
+            ${frog.pos === maxSteps ? `<div class="trophy">🏆</div><div class="frogBadge ${frog.colour}" style="position:absolute">🐸</div>` : ""}
+          </div>
+          <div class="topname">${frog.name || "Unnamed"}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("weeks").innerHTML = [...weeks].reverse().map(week => `
+        <div class="week">${week}</div>
+      `).join("");
+
+      document.getElementById("lanes").innerHTML = frogs.map((frog, index) => `
+        <div class="lane">
+          ${[1, 2, 3, 4, 5, 6].map(step => `
+            <div class="square">
+              <span class="step">${step}</span>
+              ${frog.pos === step && frog.pos < maxSteps ? `<div class="frogBadge ${frog.colour}">🐸</div>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      `).join("");
+
+      document.getElementById("cards").innerHTML = frogs.map((frog, index) => `
+        <div class="card">
+          <div class="crown">${leader > 0 && frog.pos === leader && frog.pos < maxSteps ? "👑" : ""}</div>
+          <div class="frogspot">${frog.pos === 0 ? `<div class="frogBadge ${frog.colour}">🐸</div>` : ""}</div>
+          <input class="nameinput" data-index="${index}" value="${(frog.name || "").replace(/"/g, "&quot;")}" />
+          <div class="score">${getInitials(frog.name)} • ${frog.pos}/${maxSteps}</div>
+          <div class="buttons">
+            <button class="smallbtn minus" data-move="${index},-1">−</button>
+            <button class="smallbtn plus" data-move="${index},1">+</button>
+          </div>
+          <div class="bar">
+            <div class="fill ${frog.colour}" style="width:${(frog.pos / maxSteps) * 100}%"></div>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("winner").style.display = frogs.some(frog => frog.pos === maxSteps) ? "block" : "none";
+
+      document.querySelectorAll("[data-move]").forEach(button => {
+        button.onclick = () => {
+          const [index, direction] = button.dataset.move.split(",").map(Number);
+          moveFrog(index, direction);
+        };
+      });
+
+      document.querySelectorAll(".nameinput").forEach(input => {
+        input.oninput = () => {
+          frogs[Number(input.dataset.index)].name = input.value;
+          saveState();
+          render();
+        };
+      });
+    }
+
+    document.getElementById("soundBtn").onclick = () => {
+      soundOn = !soundOn;
+      document.getElementById("soundBtn").textContent = soundOn ? "🔊 Sound On" : "🔇 Muted";
+    };
+
+    document.getElementById("resetBtn").onclick = () => {
+      frogs = frogs.map(frog => ({ ...frog, pos: 0 }));
+      saveState();
+      render();
+    };
+
+    document.getElementById("resetNamesBtn").onclick = () => {
+      frogs = structuredClone(defaults);
+      saveState();
+      render();
+    };
+
+    document.getElementById("copyBtn").onclick = async () => {
+      const stateUrl = location.origin + location.pathname + "#state=" + btoa(encodeURIComponent(JSON.stringify(frogs)));
+
+      try {
+        await navigator.clipboard.writeText(stateUrl);
+        showToast("Scoreboard link copied");
+      } catch (error) {
+        prompt("Copy this scoreboard link:", stateUrl);
+      }
+    };
+
+    unlockIfAllowed();
+    render();
+  </script>
 </body>
 </html>
