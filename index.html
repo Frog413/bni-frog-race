@@ -748,9 +748,7 @@
         </div>
       `).join("");
 
-      document.getElementById("weeks").innerHTML = [...weeks].reverse().map(week => `
-        <div class="week">${week}</div>
-      `).join("");
+      document.getElementById("weeks").innerHTML = "";
 
       document.getElementById("lanes").innerHTML = frogs.map((frog, index) => `
         <div class="lane">
