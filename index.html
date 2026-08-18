@@ -527,7 +527,7 @@
   <div class="wrap" id="gameWrap">
     <section class="hero">
       <h1>🐸 BNI 1:1 Frog Race 🍃</h1>
-   <p class="subtitle">
+   <p class="subtitle"> <input id="raceDates" value="20 August 2026 to 30 September 2026" style="text-align:center;border:none;background:transparent;font-size:20px;font-weight:700;color:#475569;width:100%;"> </p>
 2
 <input id="raceDates"
 3
@@ -584,7 +584,7 @@ style="text-align:center;border:none;background:transparent;font-size:20px;font-
   <script>
     const PASSWORD = "FROG2026";
     const maxSteps = 6;
-   let weeks = JSON.parse( 2 localStorage.getItem("frogRaceWeeks") 3 ) || [ 4 "20 Aug", 5 "27 Aug", 6 "3 Sep", 7 "10 Sep", 8 "17 Sep", 9 "24 Sep" 10 ];
+   let weeks = JSON.parse(localStorage.getItem("frogRaceWeeks")) || [ 2 "20 Aug", 3 "27 Aug", 4 "3 Sep", 5 "10 Sep", 6 "17 Sep", 7 "24 Sep" 8 ]; 9 ``( 2 localStorage.getItem("frogRaceWeeks") 3 ) || [ 4 "20 Aug", 5 "27 Aug", 6 "3 Sep", 7 "10 Sep", 8 "17 Sep", 9 "24 Sep" 10 ];
 
     const defaults = [
       ["Andy J", "pink"],
