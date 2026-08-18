@@ -527,7 +527,15 @@
   <div class="wrap" id="gameWrap">
     <section class="hero">
       <h1>🐸 BNI 1:1 Frog Race 🍃</h1>
-      <p class="subtitle">20 August 2026 to 30 September 2026</p>
+   <p class="subtitle">
+2
+<input id="raceDates"
+3
+value="20 August 2026 to 30 September 2026"
+4
+style="text-align:center;border:none;background:transparent;font-size:20px;font-weight:700;color:#475569;width:100%;">
+5
+</p>   
       <p class="hint">Move a frog up one square for every completed 1:1. Names are editable, sounds are optional, and your board saves in this browser.</p>
     </section>
 
@@ -576,7 +584,7 @@
   <script>
     const PASSWORD = "FROG2026";
     const maxSteps = 6;
-    const weeks = ["20 Aug", "27 Aug", "3 Sep", "10 Sep", "17 Sep", "24 Sep"];
+   let weeks = JSON.parse( 2 localStorage.getItem("frogRaceWeeks") 3 ) || [ 4 "20 Aug", 5 "27 Aug", 6 "3 Sep", 7 "10 Sep", 8 "17 Sep", 9 "24 Sep" 10 ];
 
     const defaults = [
       ["Andy J", "pink"],
@@ -748,9 +756,45 @@
         </div>
       `).join("");
 
-      document.getElementById("weeks").innerHTML = [...weeks].reverse().map(week => `
-        <div class="week">${week}</div>
-      `).join("");
+    document.getElementById("weeks").innerHTML = [...weeks]
+2
+.reverse()
+3
+.map((week, index) => `
+4
+<div class="week">
+5
+<input
+6
+value="${week}"
+7
+class="weekInput"
+8
+data-week="${weeks.length - 1 - index}"
+9
+style="
+10
+background:transparent;
+11
+border:none;
+12
+text-align:right;
+13
+width:100%;
+14
+font-size:12px;
+15
+font-weight:900;
+16
+color:#047857;
+17
+"
+18
+>
+19
+</div>
+20
+`).join("");
 
       document.getElementById("lanes").innerHTML = frogs.map((frog, index) => `
         <div class="lane">
@@ -792,6 +836,37 @@
         input.oninput = () => {
           frogs[Number(input.dataset.index)].name = input.value;
           saveState();
+          document.addEventListener("input", (e) => {
+2
+ 
+3
+if (e.target.classList.contains("weekInput")) {
+4
+ 
+5
+const index = Number(e.target.dataset.week);
+6
+ 
+7
+weeks[index] = e.target.value;
+8
+ 
+9
+localStorage.setItem(
+10
+"frogRaceWeeks",
+11
+JSON.stringify(weeks)
+12
+);
+13
+ 
+14
+}
+15
+ 
+16
+});
           render();
         };
       });
