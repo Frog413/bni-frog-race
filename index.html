@@ -575,7 +575,7 @@
 
   <script>
     const PASSWORD = "FROG2026";
-    const maxSteps = 6;
+    const maxSteps = 10;
     const weeks = ["20 Aug", "27 Aug", "3 Sep", "10 Sep", "17 Sep", "24 Sep"];
 
     const defaults = [
@@ -754,7 +754,7 @@
 
       document.getElementById("lanes").innerHTML = frogs.map((frog, index) => `
         <div class="lane">
-          ${[1, 2, 3, 4, 5, 6].map(step => `
+          ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(step => `
             <div class="square">
               <span class="step">${step}</span>
               ${frog.pos === step && frog.pos < maxSteps ? `<div class="frogBadge ${frog.colour}">🐸</div>` : ""}
